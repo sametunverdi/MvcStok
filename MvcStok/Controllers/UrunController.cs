@@ -19,10 +19,17 @@ namespace MvcStok.Controllers
         [HttpGet]
         public ActionResult UrunEkle()
         {
+            List<SelectListItem> degerler = (from i in db.TBLKATEGORILER.ToList()  select  new SelectListItem
+
+            {
+                 Text = i.KATEGORIAD,
+                 Value = i.KATEGORIID.ToString()
+            }).ToList();
+            ViewBag.dgr = degerler;
             return View();
         }
         [HttpPost]
-        public ActionResult UrunEkle(TBLURUNLER p1) 
+        public ActionResult UrunEkle(TBLURUNLER p1)
         {
             db.TBLURUNLER.Add(p1);
             db.SaveChanges();
