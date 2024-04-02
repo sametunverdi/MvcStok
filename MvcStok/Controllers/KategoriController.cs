@@ -35,5 +35,11 @@ namespace MvcStok.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        public ActionResult KategoriGetir(int id) 
+        {
+            var kgtr = db.TBLKATEGORILER.Find(id);
+            return View("KategoriGetir", kgtr);
+        }
+
     }
 }

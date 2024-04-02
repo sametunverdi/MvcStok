@@ -23,7 +23,7 @@ namespace MvcStok.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult YeniMusteri(TBLMUSTERILER p1) 
+        public ActionResult YeniMusteri(TBLMUSTERILER p1)
         {
             db.TBLMUSTERILER.Add(p1);
             db.SaveChanges();
