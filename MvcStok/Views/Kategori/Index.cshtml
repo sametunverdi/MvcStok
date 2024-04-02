@@ -1,8 +1,23 @@
-﻿
+﻿@using MvcStok.Models.Entity
+@model List<TBLKATEGORILER>
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
 }
 
-<h2>Burası Kategorilerin Listeleneceği Sayfa Olacak</h2>
+<table class=" table table-bordered">
+    <tr>
+        <th>KATEGORİ ID</th>
+        <th>KATEGORİ ADI</th>
+    </tr>
+    <tbody>
+        @foreach(var kgtr in Model) 
+        {
+            <tr>
+                <th>@kgtr.KATEGORIID</th>
+                <td>@kgtr.KATEGORIAD</td>
+            </tr>
+        }
 
+    </tbody>
+</table>
