@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MvcStok.Models.Entity;
+using Newtonsoft.Json.Bson;
 
 namespace MvcStok.Controllers
 {
@@ -27,6 +28,13 @@ namespace MvcStok.Controllers
             db.TBLMUSTERILER.Add(p1);
             db.SaveChanges();
             return View();
+        }
+        public ActionResult SIL(int id) 
+        {
+            var musteri = db.TBLMUSTERILER.Find(id);
+            db.TBLMUSTERILER.Remove(musteri);
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
 
