@@ -8,6 +8,8 @@ namespace MvcStok
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+            // Bu satırın olması gerekmiyor
+            // filters.Add(new AuthorizeAttribute()); 
         }
     }
 }

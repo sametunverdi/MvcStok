@@ -1,30 +1,39 @@
 ﻿@using MvcStok.Models.Entity
+
 @model List<TBLKATEGORILER>
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
 }
 
-<table class=" table table-bordered">
+<table class="table table-bordered">
     <tr>
-        <th>KATEGORİ ID</th>
-        <th>KATEGORİ ADI</th>
-        <th>SİL</th>
-        <th>GÜNCELLE</th>
+        <th>@ViewBag.CategoryId</th>
+        <th>@ViewBag.CategoryName</th>
+        <th>@ViewBag.Delete</th>
+        <th>@ViewBag.Update</th>
     </tr>
     <tbody>
-        @foreach(var kgtr in Model) 
+        @foreach (var kgtr in Model)
         {
             <tr>
                 <th>@kgtr.KATEGORIID</th>
                 <td>@kgtr.KATEGORIAD</td>
-                <th><a href="/KATEGORI/SIL/@kgtr.KATEGORIID" class="btn btn-danger">SİL</a></th>
-                <th><a href="/KATEGORI/KATEGORIGETIR/@kgtr.KATEGORIID" class="btn btn-success">GÜNCELLE</a></th>
-
+                <th>
+                    <a href="/KATEGORI/SIL/@kgtr.KATEGORIID" class="btn btn-danger">
+                        @ViewBag.Delete
+                    </a>
+                </th>
+                <th>
+                    <a href="/KATEGORI/KATEGORIGETIR/@kgtr.KATEGORIID" class="btn btn-success">
+                        @ViewBag.Update
+                    </a>
+                </th>
             </tr>
         }
-
     </tbody>
 </table>
 
-<a href="/Kategori/YeniKategori/" class="btn btn-primary">YENİ KATEGORİ EKLE</a>
+<a href="/Kategori/YeniKategori/" class="btn btn-primary">
+    @ViewBag.NewCategory
+</a>

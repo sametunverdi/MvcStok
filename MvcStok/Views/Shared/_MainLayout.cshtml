@@ -1,12 +1,11 @@
-﻿
-@{
+﻿@{
     Layout = null;
 }
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Bootstrap Example</title>
+    <title>Mvc Stok</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -26,11 +25,35 @@
                 <li><a href="/Musteri/Index/">Müşteriler</a></li>
                 <li><a href="/Satıs/Index/">Satışlar</a></li>
                 <li><a href="/Default/Index/">Yardım</a></li>
+                
 
+
+                <!-- Dil Seçimi Formu -->
+                <form method="get" action="@Url.Action("ChangeLanguage", "Account")" class="navbar-form navbar-right">
+                    <select name="language" onchange="this.form.submit()" class="form-control">
+                        <option value="en" @(Request.Cookies["language"] != null && Request.Cookies["language"].Value == "en" ? "selected" : "")>English</option>
+                        <option value="tr" @(Request.Cookies["language"] != null && Request.Cookies["language"].Value == "tr" ? "selected" : "")>Türkçe</option>
+                    </select>
+                </form>
+
+                <!-- Çıkış yapma linki, kullanıcı giriş yaptıysa göster -->
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li>
+                        <a href="@Url.Action("Logout", "Account")" class="btn btn-danger" style="margin-left: 10px;">Çıkış Yap</a>
+                    </li>
+                }
+                else
+                {
+                    <!-- Giriş yapma linki, kullanıcı giriş yapmamışsa göster -->
+                    <li>
+                        <a href="@Url.Action("Login", "Account")" class="btn btn-info" style="margin-left: 10px; font-weight: bold;">Giriş Yap</a>
+                    </li>
+                }
             </ul>
         </div>
     </nav>
-    
+
     <div class="container">
         @RenderBody()
     </div>
