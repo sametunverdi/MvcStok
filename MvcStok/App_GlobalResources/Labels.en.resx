@@ -120,6 +120,9 @@
   <data name="Brand" xml:space="preserve">
     <value>BRAND</value>
   </data>
+  <data name="Categories" xml:space="preserve">
+    <value>Categories</value>
+  </data>
   <data name="CategoryId" xml:space="preserve">
     <value>Category ID</value>
   </data>
@@ -132,17 +135,29 @@
   <data name="CustomerName" xml:space="preserve">
     <value>CUSTOMER NAME</value>
   </data>
+  <data name="Customers" xml:space="preserve">
+    <value>Customers</value>
+  </data>
   <data name="CustomerSurname" xml:space="preserve">
     <value>CUSTOMER SURNAME</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Delete</value>
   </data>
+  <data name="Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
   <data name="InvalidLogin" xml:space="preserve">
     <value>Invalid username or password!</value>
   </data>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
   <data name="LoginButton" xml:space="preserve">
     <value>Login</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Logout</value>
   </data>
   <data name="NewCategory" xml:space="preserve">
     <value>New Category</value>
@@ -164,6 +179,12 @@
   </data>
   <data name="ProductName" xml:space="preserve">
     <value>PRODUCT NAME</value>
+  </data>
+  <data name="Products" xml:space="preserve">
+    <value>Products</value>
+  </data>
+  <data name="Sales" xml:space="preserve">
+    <value>Sales</value>
   </data>
   <data name="Stock" xml:space="preserve">
     <value>STOCK</value>

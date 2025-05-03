@@ -8,20 +8,23 @@
 
 <table class="table table-bordered">
     <tr>
-        <th>@ViewBag.ProductId</th>
-        <th>@ViewBag.ProductName</th>
-        <th>@ViewBag.Brand</th>
-        <th>@ViewBag.Category</th>
-        <th>@ViewBag.Price</th>
-        <th>@ViewBag.Stock</th>
-        <th>@ViewBag.Delete</th>
-        <th>@ViewBag.Update</th>
+        <th>@Resources.Labels.ProductId
+        </th>
+        <th>@Resources.Labels.ProductName</th>
+        <th>@Resources.Labels.Brand</th>
+        <th>@Resources.Labels.CategoryName</th>
+        <th>@Resources.Labels.Price</th>
+        <th>@Resources.Labels.Stock</th>
+        <th>@Resources.Labels.Delete</th>
+        <th>@Resources.Labels.Update</th>
     </tr>
     <tbody>
         @foreach (var urn in Model)
         {
             <tr>
-                <th>@urn.URUNID</th>
+                <th>@urn.URUNID
+                    
+                </th>
                 <td>@urn.URUNAD</td>
                 <td>@urn.MARKA</td>
                 <td>@urn.TBLKATEGORILER.KATEGORIAD</td>

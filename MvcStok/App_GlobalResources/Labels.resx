@@ -120,6 +120,9 @@
   <data name="Brand" xml:space="preserve">
     <value>MARKASI</value>
   </data>
+  <data name="Categories" xml:space="preserve">
+    <value>Kategoriler</value>
+  </data>
   <data name="CategoryId" xml:space="preserve">
     <value>Kategori ID</value>
   </data>
@@ -132,17 +135,29 @@
   <data name="CustomerName" xml:space="preserve">
     <value>MÜŞTERİ AD</value>
   </data>
+  <data name="Customers" xml:space="preserve">
+    <value>Müşteriler</value>
+  </data>
   <data name="CustomerSurname" xml:space="preserve">
     <value>MÜŞTERİ SOYAD</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Sil</value>
   </data>
+  <data name="Help" xml:space="preserve">
+    <value>Yardım</value>
+  </data>
   <data name="InvalidLogin" xml:space="preserve">
     <value>Geçersiz kullanıcı adı veya şifre!</value>
   </data>
+  <data name="Login" xml:space="preserve">
+    <value>Giriş Yap</value>
+  </data>
   <data name="LoginButton" xml:space="preserve">
     <value>Giriş Yap</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Çıkış Yap</value>
   </data>
   <data name="NewCategory" xml:space="preserve">
     <value>Yeni Kategori</value>
@@ -164,6 +179,12 @@
   </data>
   <data name="ProductName" xml:space="preserve">
     <value>ÜRÜN AD</value>
+  </data>
+  <data name="Products" xml:space="preserve">
+    <value>Ürünler</value>
+  </data>
+  <data name="Sales" xml:space="preserve">
+    <value>Satışlar</value>
   </data>
   <data name="Stock" xml:space="preserve">
     <value>STOK</value>

@@ -8,10 +8,23 @@
 
 <table class="table table-bordered">
     <tr>
-        <th>@ViewBag.CategoryId</th>
-        <th>@ViewBag.CategoryName</th>
-        <th>@ViewBag.Delete</th>
-        <th>@ViewBag.Update</th>
+
+        <th>
+        
+            @Resources.Labels.CategoryId
+        </th>
+        <th>
+            @Resources.Labels.CategoryName
+        
+        </th>
+        <th>
+        
+            @Resources.Labels.Delete    
+        </th>
+        <th>
+            @Resources.Labels.Update
+        
+        </th>
     </tr>
     <tbody>
         @foreach (var kgtr in Model)
