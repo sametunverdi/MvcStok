@@ -2,49 +2,141 @@
 @model List<TBLURUNLER>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Ürünler";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
 }
 
 <table class="table table-bordered">
-    <tr>
-        <th>@Resources.Labels.ProductId
-        </th>
-        <th>@Resources.Labels.ProductName</th>
-        <th>@Resources.Labels.Brand</th>
-        <th>@Resources.Labels.CategoryName</th>
-        <th>@Resources.Labels.Price</th>
-        <th>@Resources.Labels.Stock</th>
-        <th>@Resources.Labels.Delete</th>
-        <th>@Resources.Labels.Update</th>
-    </tr>
+    <thead>
+        <tr>
+            <th>@Resources.Labels.ProductId</th>
+            <th>@Resources.Labels.ProductName</th>
+            <th>@Resources.Labels.Brand</th>
+            <th>@Resources.Labels.CategoryName</th>
+            <th>@Resources.Labels.Price</th>
+            <th>@Resources.Labels.Stock</th>
+            <th>@Resources.Labels.Delete</th>
+            <th>@Resources.Labels.Update</th>
+        </tr>
+    </thead>
     <tbody>
         @foreach (var urn in Model)
         {
             <tr>
-                <th>@urn.URUNID
-                    
-                </th>
+                <td>@urn.URUNID</td>
                 <td>@urn.URUNAD</td>
                 <td>@urn.MARKA</td>
                 <td>@urn.TBLKATEGORILER.KATEGORIAD</td>
                 <td>@urn.FIYAT</td>
                 <td>@urn.STOK</td>
-                <th>
-                    <a href="/URUN/SIL/@urn.URUNID" class="btn btn-danger">
-                        @ViewBag.Delete
-                    </a>
-                </th>
-                <th>
-                    <a href="/URUN/GUNCELLE/@urn.URUNID" class="btn btn-success">
-                        @ViewBag.Update
-                    </a>
-                </th>
+                <td>
+                    <a href="/URUN/SIL/@urn.URUNID" class="btn btn-danger">@ViewBag.Delete</a>
+                </td>
+                <td>
+                    <a href="#" class="btn btn-success btn-update" data-id="@urn.URUNID">@ViewBag.Update</a>
+                </td>
             </tr>
         }
     </tbody>
 </table>
 
-<a href="/URUN/UrunEkle/" class="btn btn-primary">
-    @ViewBag.NewProduct
-</a>
+<a href="/URUN/UrunEkle/" class="btn btn-primary">@ViewBag.NewProduct</a>
+<!-- GÜNCELLE MODAL -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="editModalLabel">Ürün Güncelle</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editProductForm">
+                    <input type="hidden" id="urunId" name="URUNID" />
+                    <div class="form-group">
+                        <label>Ürün Adı</label>
+                        <input type="text" id="urunAd" name="URUNAD" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Marka</label>
+                        <input type="text" id="urunMarka" name="MARKA" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Fiyat</label>
+                        <input type="text" id="urunFiyat" name="FIYAT" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Stok</label>
+                        <input type="text" id="urunStok" name="STOK" class="form-control" />
+                    </div>
+                    <button type="submit" class="btn btn-success">Güncelle</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        // Güncelle butonuna tıklandığında modal'ı aç
+        $(".btn-update").click(function (e) {
+            e.preventDefault();
+            var urunId = $(this).data("id");
+
+            // AJAX ile ürün verilerini al
+            $.ajax({
+                url: '/Urun/UrunGetir/' + urunId,
+                type: 'GET',
+                success: function (data) {
+                    // Modal'daki form elemanlarına verileri aktar
+                    $("#urunId").val(data.URUNID);
+                    $("#urunAd").val(data.URUNAD);
+                    $("#urunMarka").val(data.MARKA);
+                    $("#urunFiyat").val(data.FIYAT);
+                    $("#urunStok").val(data.STOK);
+                    // Modal'ı göster
+                    $("#editModal").modal('show');
+                },
+                error: function () {
+                    alert("Bir hata oluştu.");
+                }
+            });
+        });
+
+        // Güncelleme formu gönderildiğinde
+        $("#editProductForm").submit(function (e) {
+            e.preventDefault();
+
+            var formData = {
+                URUNID: $("#urunId").val(),
+                URUNAD: $("#urunAd").val(),
+                MARKA: $("#urunMarka").val(),
+                FIYAT: $("#urunFiyat").val(),
+                STOK: $("#urunStok").val()
+            };
+
+            // AJAX ile güncelleme işlemi
+            $.ajax({
+                url: '/Urun/UrunGuncelle',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        $("#editModal").modal('hide');
+                        location.reload(); // Sayfayı yenile
+                    } else {
+                        alert("Güncelleme başarısız.");
+                    }
+                },
+                error: function () {
+                    alert("Hata oluştu.");
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+

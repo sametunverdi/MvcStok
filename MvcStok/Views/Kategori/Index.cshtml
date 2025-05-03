@@ -10,20 +10,20 @@
     <tr>
 
         <th>
-        
+
             @Resources.Labels.CategoryId
         </th>
         <th>
             @Resources.Labels.CategoryName
-        
+
         </th>
         <th>
-        
-            @Resources.Labels.Delete    
+
+            @Resources.Labels.Delete
         </th>
         <th>
             @Resources.Labels.Update
-        
+
         </th>
     </tr>
     <tbody>
@@ -38,7 +38,7 @@
                     </a>
                 </th>
                 <th>
-                    <a href="/KATEGORI/KATEGORIGETIR/@kgtr.KATEGORIID" class="btn btn-success">
+                    <a href="#" class="btn btn-success btn-update" data-id="@kgtr.KATEGORIID">
                         @ViewBag.Update
                     </a>
                 </th>
@@ -50,3 +50,72 @@
 <a href="/Kategori/YeniKategori/" class="btn btn-primary">
     @ViewBag.NewCategory
 </a>
+<!-- GÜNCELLE MODAL -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="editModalLabel">Kategori Güncelle</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editCategoryForm">
+                    <input type="hidden" id="kategoriId" name="KATEGORIID" />
+                    <div class="form-group">
+                        <label>Kategori Adı</label>
+                        <input type="text" id="kategoriAd" name="KATEGORIAD" class="form-control" />
+                    </div>
+                    <button type="submit" class="btn btn-success">Güncelle</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $(".btn-update").click(function (e) {
+            e.preventDefault();
+            var kategoriId = $(this).data("id");
+
+            $.ajax({
+                url: '/Kategori/KategoriGetir/' + kategoriId,
+                type: 'GET',
+                success: function (data) {
+                    $("#kategoriId").val(data.KATEGORIID);
+                    $("#kategoriAd").val(data.KATEGORIAD);
+                    $("#editModal").modal('show');
+                },
+                error: function () {
+                    alert("Bir hata oluştu.");
+                }
+            });
+        });
+
+        // GÜNCELLE FORMU GÖNDERİLİNCE
+        $("#editCategoryForm").submit(function (e) {
+            e.preventDefault();
+
+            var formData = {
+                KATEGORIID: $("#kategoriId").val(),
+                KATEGORIAD: $("#kategoriAd").val()
+            };
+
+            $.ajax({
+                url: '/Kategori/KategoriGuncelle',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        $("#editModal").modal('hide');
+                        location.reload(); // Sayfayı yenile
+                    } else {
+                        alert("Güncelleme başarısız.");
+                    }
+                },
+                error: function () {
+                    alert("Hata oluştu.");
+                }
+            });
+        });
+    });
+</script>

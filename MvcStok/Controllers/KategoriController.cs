@@ -52,18 +52,32 @@ public class KategoriController : Controller
     }
 
     [Authorize]
-    public ActionResult KategoriGetir(int id)
+    public JsonResult KategoriGetir(int id)
     {
         var kgtr = db.TBLKATEGORILER.Find(id);
-        return View("KategoriGetir", kgtr);
+        if (kgtr != null)
+        {
+            return Json(new
+            {
+                KATEGORIID = kgtr.KATEGORIID,
+                KATEGORIAD = kgtr.KATEGORIAD
+            }, JsonRequestBehavior.AllowGet);
+        }
+        return Json(null, JsonRequestBehavior.AllowGet);
     }
 
     [Authorize]
-    public ActionResult Guncelle(TBLKATEGORILER p1)
+    [HttpPost]
+    public ActionResult KategoriGuncelle(TBLKATEGORILER kategori)
     {
-        var ktg = db.TBLKATEGORILER.Find(p1.KATEGORIID);
-        ktg.KATEGORIAD = p1.KATEGORIAD;
-        db.SaveChanges();
-        return RedirectToAction("Index");
+        var kategoriDb = db.TBLKATEGORILER.Find(kategori.KATEGORIID);
+        if (kategoriDb != null)
+        {
+            kategoriDb.KATEGORIAD = kategori.KATEGORIAD;
+            db.SaveChanges();
+            return Json(new { success = true });
+        }
+        return Json(new { success = false });
     }
+
 }
