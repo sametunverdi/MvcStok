@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using MvcStok.Models.Entity;
 using Resources;
 
+
 namespace MvcStok.Controllers
 {
     [Authorize]
@@ -33,6 +34,7 @@ namespace MvcStok.Controllers
 
         // Ürün ekleme sayfası
         [HttpGet]
+
         public ActionResult UrunEkle()
         {
             // Kategorileri çekiyoruz ve dropdown list olarak View'a gönderiyoruz
@@ -52,22 +54,27 @@ namespace MvcStok.Controllers
         {
             if (ModelState.IsValid)
             {
-                var ktg = db.TBLKATEGORILER.Where(m => m.KATEGORIID == p1.TBLKATEGORILER.KATEGORIID).FirstOrDefault();
-                p1.TBLKATEGORILER = ktg;
+                // Kategori eşlemesini düzeltiyoruz
+                var kategori = db.TBLKATEGORILER.Find(p1.URUNID);
+                p1.TBLKATEGORILER = kategori;
+
                 db.TBLURUNLER.Add(p1);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            // Hata durumunda, kategorileri tekrar gönderiyoruz
-            List<SelectListItem> degerler = (from i in db.TBLKATEGORILER.ToList()
-                                             select new SelectListItem
-                                             {
-                                                 Text = i.KATEGORIAD,
-                                                 Value = i.KATEGORIID.ToString()
-                                             }).ToList();
+
+            // Eğer valid değilse, kategorileri tekrar doldur
+            List<SelectListItem> degerler = db.TBLKATEGORILER
+                .Select(i => new SelectListItem
+                {
+                    Text = i.KATEGORIAD,
+                    Value = i.KATEGORIID.ToString()
+                }).ToList();
+
             ViewBag.Kategoriler = degerler;
             return View(p1);
         }
+
 
         // Ürün silme işlemi
         public ActionResult SIL(int id)

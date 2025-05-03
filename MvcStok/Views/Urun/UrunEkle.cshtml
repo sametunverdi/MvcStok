@@ -15,8 +15,10 @@
     </div>
     <div>
         <label>Kategori Seçiniz</label>
-        @Html.DropDownListFor(m=> m.TBLKATEGORILER.KATEGORIID,(List<SelectListItem>)ViewBag.dgr, new { @class="form-control"})
+        @Html.DropDownList("KATEGORIID", (List<SelectListItem>)ViewBag.Kategoriler, "Kategori Seçin", new { @class = "form-control" })
+
     </div>
+
     <div>
         <label>Fiyatı</label>
         <input type="text" class="form-control" name="FIYAT" />

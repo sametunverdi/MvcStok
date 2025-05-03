@@ -51,19 +51,38 @@ namespace MvcStok.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult MusteriGetir(int id)
+        public JsonResult MusteriGetir(int id)
         {
-            var mus = db.TBLMUSTERILER.Find(id);
-            return View("MusteriGetir", mus);
+            var kgtr = db.TBLMUSTERILER.Find(id);
+            if (kgtr != null)
+            {
+                return Json(new
+                {
+                    MUSTERIID = kgtr.MUSTERIID,
+                    MUSTERIAD = kgtr.MUSTERIAD,
+                    MUSTERISOYAD = kgtr.MUSTERISOYAD
+                }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(null, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Guncelle(TBLMUSTERILER p1)
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult MusteriGuncelle(TBLMUSTERILER musteri)
         {
-            var musteri = db.TBLMUSTERILER.Find(p1.MUSTERIID);
-            musteri.MUSTERIAD = p1.MUSTERIAD;
-            musteri.MUSTERISOYAD = p1.MUSTERISOYAD;
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            var musteriDb = db.TBLMUSTERILER.Find(musteri.MUSTERIID);
+            if (musteriDb != null)
+            {
+                musteriDb.MUSTERIAD = musteri.MUSTERIAD;
+                musteriDb.MUSTERISOYAD = musteri.MUSTERISOYAD;
+
+                db.SaveChanges();
+                return Json(new { success = true });
+            }
+            return Json(new { success = false });
         }
+
+      
     }
 }
