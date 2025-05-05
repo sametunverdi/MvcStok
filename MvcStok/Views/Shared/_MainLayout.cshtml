@@ -1,9 +1,4 @@
-﻿@{
-    Layout = null;
-}
-@using Resources
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Mvc Stok</title>
@@ -12,6 +7,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -27,9 +25,6 @@
                 <li><a href="/Satıs/Index/">@Resources.Labels.Sales</a></li>
                 <li><a href="/Default/Index/">@Resources.Labels.Help</a></li>
 
-
-                
-
                 <!-- Dil Seçimi Formu -->
                 <form method="get" action="@Url.Action("ChangeLanguage", "Account")" class="navbar-form navbar-right">
                     <select name="language" onchange="this.form.submit()" class="form-control">
@@ -38,7 +33,6 @@
                     </select>
                 </form>
 
-                <!-- Çıkış yapma linki, kullanıcı giriş yaptıysa göster -->
                 @if (User.Identity.IsAuthenticated)
                 {
                     <li>
@@ -47,7 +41,6 @@
                 }
                 else
                 {
-                    <!-- Giriş yapma linki, kullanıcı giriş yapmamışsa göster -->
                     <li>
                         <a href="@Url.Action("Login", "Account")" class="btn btn-info" style="margin-left: 10px; font-weight: bold;">@Resources.Labels.Login</a>
                     </li>
@@ -59,6 +52,32 @@
     <div class="container">
         @RenderBody()
     </div>
+
+    <!-- Global JavaScript for SweetAlert2 -->
+    <script>
+        $(function () {
+            // SweetAlert2 ile silme onayı
+            $(document).on('click', '.btn-delete', function (e) {
+                e.preventDefault();
+                var deleteUrl = $(this).attr('href'); // Silme URL'sini al
+
+                Swal.fire({
+                    title: 'Emin misiniz?',
+                    text: "Bu kaydı silmek üzeresiniz!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Evet, sil!',
+                    cancelButtonText: 'Hayır'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = deleteUrl; // Silme işlemini başlat
+                    }
+                });
+            });
+        });
+    </script>
 
 </body>
 </html>
