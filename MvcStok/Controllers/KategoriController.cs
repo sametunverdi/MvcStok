@@ -4,26 +4,26 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MvcStok.Models.Entity;
-
 using Resources;
 
 public class KategoriController : Controller
 {
     MvcDbStokEntities db = new MvcDbStokEntities();
 
-    // Herkes görebilir
     [AllowAnonymous]
     public ActionResult Index()
     {
-        // ViewBag üzerinden metinleri çoklu dile göre gönderiyoruz
+        // Etiketler
         ViewBag.CategoryId = Labels.CategoryId;
         ViewBag.CategoryName = Labels.CategoryName;
         ViewBag.Delete = Labels.Delete;
         ViewBag.Update = Labels.Update;
         ViewBag.NewCategory = Labels.NewCategory;
 
-        var kategoriler = db.TBLKATEGORILER.ToList();
-        return View(kategoriler);
+        // Kategorileri veritabanından çek
+        var kategoriListesi = db.TBLKATEGORILER.ToList();
+
+        return View(kategoriListesi); // View'a gönder
     }
 
     [Authorize]
@@ -37,8 +37,14 @@ public class KategoriController : Controller
     [HttpPost]
     public ActionResult YeniKategori(TBLKATEGORILER p1)
     {
+        if (!ModelState.IsValid)
+        {
+            return View("YeniKategori");
+        }
+
         db.TBLKATEGORILER.Add(p1);
         db.SaveChanges();
+
         return RedirectToAction("Index");
     }
 
@@ -60,7 +66,8 @@ public class KategoriController : Controller
             return Json(new
             {
                 KATEGORIID = kgtr.KATEGORIID,
-                KATEGORIAD = kgtr.KATEGORIAD
+                KATEGORIAD = kgtr.KATEGORIAD,
+                KATEGORIAD_EN = kgtr.KATEGORIAD_EN // <-- Bu eklendi
             }, JsonRequestBehavior.AllowGet);
         }
         return Json(null, JsonRequestBehavior.AllowGet);
@@ -74,10 +81,10 @@ public class KategoriController : Controller
         if (kategoriDb != null)
         {
             kategoriDb.KATEGORIAD = kategori.KATEGORIAD;
+            kategoriDb.KATEGORIAD_EN = kategori.KATEGORIAD_EN; // <-- Bu eklendi
             db.SaveChanges();
             return Json(new { success = true });
         }
         return Json(new { success = false });
     }
-
 }

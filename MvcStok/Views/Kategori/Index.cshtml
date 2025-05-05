@@ -1,47 +1,41 @@
 ﻿@using MvcStok.Models.Entity
-
 @model List<TBLKATEGORILER>
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
+    string currentLang = Request.Cookies["language"]?.Value ?? "tr";
 }
 
 <table class="table table-bordered">
-    <tr>
-
-        <th>
-
-            @Resources.Labels.CategoryId
-        </th>
-        <th>
-            @Resources.Labels.CategoryName
-
-        </th>
-        <th>
-
-            @Resources.Labels.Delete
-        </th>
-        <th>
-            @Resources.Labels.Update
-
-        </th>
-    </tr>
+    <thead>
+        <tr>
+            <th>@ViewBag.CategoryId</th>
+            <th>@ViewBag.CategoryName</th>
+            <th>@ViewBag.Delete</th>
+            <th>@ViewBag.Update</th>
+        </tr>
+    </thead>
     <tbody>
         @foreach (var kgtr in Model)
         {
-            <tr>
-                <th>@kgtr.KATEGORIID</th>
-                <td>@kgtr.KATEGORIAD</td>
-                <th>
-                    <a href="/KATEGORI/SIL/@kgtr.KATEGORIID" class="btn btn-danger">
+            <tr data-id="@kgtr.KATEGORIID">
+                <td>@kgtr.KATEGORIID</td>
+                <td>
+                    @(currentLang == "en"
+                        ? kgtr.KATEGORIAD_EN
+                        : kgtr.KATEGORIAD)
+                </td>
+                <td>
+                    <a href="#" class="btn btn-danger btn-delete" data-id="@kgtr.KATEGORIID">
                         @ViewBag.Delete
                     </a>
-                </th>
-                <th>
+                </td>
+                <td>
                     <a href="#" class="btn btn-success btn-update" data-id="@kgtr.KATEGORIID">
                         @ViewBag.Update
                     </a>
-                </th>
+                </td>
             </tr>
         }
     </tbody>
@@ -50,72 +44,94 @@
 <a href="/Kategori/YeniKategori/" class="btn btn-primary">
     @ViewBag.NewCategory
 </a>
+
 <!-- GÜNCELLE MODAL -->
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="editModalLabel">Kategori Güncelle</h4>
+                <h4 class="modal-title">Kategori Güncelle</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="editCategoryForm">
                     <input type="hidden" id="kategoriId" name="KATEGORIID" />
+
                     <div class="form-group">
-                        <label>Kategori Adı</label>
+                        <label>Türkçe Kategori Adı</label>
                         <input type="text" id="kategoriAd" name="KATEGORIAD" class="form-control" />
                     </div>
+
+                    <div class="form-group">
+                        <label>English Category Name</label>
+                        <input type="text" id="kategoriAdEn" name="KATEGORIAD_EN" class="form-control" />
+                    </div>
+
                     <button type="submit" class="btn btn-success">Güncelle</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
 <script>
-    $(document).ready(function () {
+    $(function () {
+        // Modal açma
         $(".btn-update").click(function (e) {
             e.preventDefault();
-            var kategoriId = $(this).data("id");
-
-            $.ajax({
-                url: '/Kategori/KategoriGetir/' + kategoriId,
-                type: 'GET',
-                success: function (data) {
-                    $("#kategoriId").val(data.KATEGORIID);
-                    $("#kategoriAd").val(data.KATEGORIAD);
-                    $("#editModal").modal('show');
-                },
-                error: function () {
-                    alert("Bir hata oluştu.");
-                }
+            var id = $(this).data("id");
+            $.getJSON('/Kategori/KategoriGetir/' + id, function (data) {
+                $("#kategoriId").val(data.KATEGORIID);
+                $("#kategoriAd").val(data.KATEGORIAD);
+                $("#kategoriAdEn").val(data.KATEGORIAD_EN);
+                $("#editModal").modal('show');
             });
         });
 
-        // GÜNCELLE FORMU GÖNDERİLİNCE
+        // Form gönderme
         $("#editCategoryForm").submit(function (e) {
             e.preventDefault();
-
             var formData = {
                 KATEGORIID: $("#kategoriId").val(),
-                KATEGORIAD: $("#kategoriAd").val()
+                KATEGORIAD: $("#kategoriAd").val(),
+                KATEGORIAD_EN: $("#kategoriAdEn").val()
             };
-
-            $.ajax({
-                url: '/Kategori/KategoriGuncelle',
-                type: 'POST',
-                data: formData,
-                success: function (response) {
-                    if (response.success) {
-                        $("#editModal").modal('hide');
-                        location.reload(); // Sayfayı yenile
-                    } else {
-                        alert("Güncelleme başarısız.");
-                    }
-                },
-                error: function () {
-                    alert("Hata oluştu.");
+            $.post('/Kategori/KategoriGuncelle', formData, function (resp) {
+                if (resp.success) {
+                    $("#editModal").modal('hide');
+                    location.reload();
+                } else {
+                    alert("Güncelleme başarısız.");
                 }
+            }, 'json').fail(function () {
+                alert("Hata oluştu.");
             });
         });
     });
+
+
+    // Silme işlemi - SweetAlert2 ile
+    $(".btn-delete").click(function (e) {
+        e.preventDefault();
+        var id = $(this).data("id");
+
+        Swal.fire({
+            title: 'Emin misiniz?',
+            text: "Bu kategoriyi silmek üzeresiniz!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'Hayır'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/Kategori/SIL/' + id;
+            }
+        });
+    });
+
 </script>
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
