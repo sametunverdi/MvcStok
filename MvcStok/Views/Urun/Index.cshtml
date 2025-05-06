@@ -43,7 +43,8 @@
     </tbody>
 </table>
 
-<a href="/URUN/UrunEkle/" class="btn btn-primary">@ViewBag.NewProduct</a>
+<a href="#" class="btn btn-primary" id="btnShowAddModal">@ViewBag.NewProduct</a>
+
 
 <!-- GÜNCELLE MODAL -->
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
@@ -78,6 +79,47 @@
         </div>
     </div>
 </div>
+
+<!-- ÜRÜN EKLE MODAL -->
+<div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="addProductForm">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="addProductModalLabel">Yeni Ürün Ekle</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Ürün Adı</label>
+                        <input type="text" name="URUNAD" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Marka</label>
+                        <input type="text" name="MARKA" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Fiyat</label>
+                        <input type="number" name="FIYAT" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Stok</label>
+                        <input type="number" name="STOK" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Kategori</label>
+                        <select name="URUNKATEGORI" id="kategoriDropdown" class="form-control" required></select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Kaydet</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <script>
     $(document).ready(function () {
@@ -159,4 +201,56 @@
             });
         });
     });
+
+
+    // Yeni ürün butonuna tıklanınca modal açılır
+    $("#btnShowAddModal").click(function (e) {
+        e.preventDefault();
+
+        // Kategori verilerini AJAX ile çek
+        $.ajax({
+            url: '/Urun/KategoriListesi',
+            type: 'GET',
+            success: function (kategoriler) {
+                var select = $("#kategoriDropdown");
+                select.empty();
+                $.each(kategoriler, function (i, kategori) {
+                    select.append($('<option>', {
+                        value: kategori.KATEGORIID,
+                        text: kategori.KATEGORIAD
+                    }));
+                });
+
+                $("#addProductModal").modal('show');
+            },
+            error: function () {
+                alert("Kategoriler yüklenemedi.");
+            }
+        });
+    });
+
+    // Ürün ekleme formu submit olduğunda
+    $("#addProductForm").submit(function (e) {
+        e.preventDefault();
+
+        var formData = $(this).serialize();
+
+        $.ajax({
+            url: '/Urun/UrunEkle',
+            type: 'POST',
+            data: formData,
+            success: function (response) {
+                if (response.success) {
+                    $("#addProductModal").modal('hide');
+                    location.reload();
+                } else {
+                    alert("Ürün eklenemedi.");
+                }
+            },
+            error: function () {
+                alert("Hata oluştu.");
+            }
+        });
+    });
+
 </script>

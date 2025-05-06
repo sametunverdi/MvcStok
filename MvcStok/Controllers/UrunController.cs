@@ -52,27 +52,22 @@ namespace MvcStok.Controllers
         [HttpPost]
         public ActionResult UrunEkle(TBLURUNLER p1)
         {
-            if (ModelState.IsValid)
+            try
             {
-                // Kategori eşlemesini düzeltiyoruz
-                var kategori = db.TBLKATEGORILER.Find(p1.URUNID);
-                p1.TBLKATEGORILER = kategori;
-
-                db.TBLURUNLER.Add(p1);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            // Eğer valid değilse, kategorileri tekrar doldur
-            List<SelectListItem> degerler = db.TBLKATEGORILER
-                .Select(i => new SelectListItem
+                var kategori = db.TBLKATEGORILER.Find(p1.URUNKATEGORI);
+                if (kategori != null)
                 {
-                    Text = i.KATEGORIAD,
-                    Value = i.KATEGORIID.ToString()
-                }).ToList();
-
-            ViewBag.Kategoriler = degerler;
-            return View(p1);
+                    p1.TBLKATEGORILER = kategori;
+                    db.TBLURUNLER.Add(p1);
+                    db.SaveChanges();
+                    return Json(new { success = true });
+                }
+                return Json(new { success = false });
+            }
+            catch (Exception)
+            {
+                return Json(new { success = false });
+            }
         }
 
 
@@ -122,5 +117,26 @@ namespace MvcStok.Controllers
             }
             return Json(new { success = false });
         }
+
+
+        [HttpGet]
+        public JsonResult KategoriListesi()
+        {
+            try
+            {
+                var kategoriler = db.TBLKATEGORILER.Select(k => new
+                {
+                    KATEGORIID = k.KATEGORIID,
+                    KATEGORIAD = k.KATEGORIAD
+                }).ToList();
+
+                return Json(kategoriler, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
+        }
+
     }
 }
