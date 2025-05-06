@@ -38,9 +38,16 @@ namespace MvcStok.Controllers
         [HttpPost]
         public ActionResult YeniMusteri(TBLMUSTERILER p1)
         {
-            db.TBLMUSTERILER.Add(p1);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                db.TBLMUSTERILER.Add(p1);
+                db.SaveChanges();
+                return Json(new { success = true });
+            }
+            catch
+            {
+                return Json(new { success = false });
+            }
         }
 
         public ActionResult SIL(int id)
@@ -82,6 +89,7 @@ namespace MvcStok.Controllers
             }
             return Json(new { success = false });
         }
+
 
       
     }
