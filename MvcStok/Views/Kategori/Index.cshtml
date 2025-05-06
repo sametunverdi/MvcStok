@@ -42,9 +42,10 @@
     </tbody>
 </table>
 
-<a href="/Kategori/YeniKategori/" class="btn btn-primary">
+<button class="btn btn-primary" data-toggle="modal" data-target="#createModal">
     @ViewBag.NewCategory
-</a>
+</button>
+
 
 <!-- GÜNCELLE MODAL -->
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog">
@@ -71,6 +72,32 @@
         </div>
     </div>
 </div>
+
+<!-- EKLEME MODAL -->
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Yeni Kategori Ekle</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createCategoryForm">
+                    <div class="form-group">
+                        <label>Türkçe Kategori Adı</label>
+                        <input type="text" id="yeniKategoriAd" name="KATEGORIAD" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label>English Category Name</label>
+                        <input type="text" id="yeniKategoriAdEn" name="KATEGORIAD_EN" class="form-control" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Ekle</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
     $(function () {
@@ -106,4 +133,28 @@
             });
         });
     });
+
+
+    // Yeni kategori ekleme
+    $("#createCategoryForm").submit(function (e) {
+        e.preventDefault();
+        var formData = {
+            KATEGORIAD: $("#yeniKategoriAd").val(),
+            KATEGORIAD_EN: $("#yeniKategoriAdEn").val()
+        };
+        $.post('/Kategori/YeniKategoriAjax', formData, function (resp) {
+            if (resp.success) {
+                $("#createModal").modal('hide');
+                location.reload();
+            } else {
+                alert("Ekleme başarısız.");
+            }
+        }, 'json').fail(function () {
+            alert("Sunucu hatası.");
+        });
+    });
+
+
 </script>
+
+

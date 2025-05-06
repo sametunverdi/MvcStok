@@ -77,14 +77,37 @@ public class KategoriController : Controller
     [HttpPost]
     public ActionResult KategoriGuncelle(TBLKATEGORILER kategori)
     {
+        if (kategori == null || kategori.KATEGORIID == 0)
+        {
+            return Json(new { success = false, message = "Geçersiz veri." });
+        }
+
         var kategoriDb = db.TBLKATEGORILER.Find(kategori.KATEGORIID);
         if (kategoriDb != null)
         {
             kategoriDb.KATEGORIAD = kategori.KATEGORIAD;
-            kategoriDb.KATEGORIAD_EN = kategori.KATEGORIAD_EN; // <-- Bu eklendi
+            kategoriDb.KATEGORIAD_EN = kategori.KATEGORIAD_EN;
             db.SaveChanges();
             return Json(new { success = true });
         }
-        return Json(new { success = false });
+
+        return Json(new { success = false, message = "Kategori bulunamadı." });
     }
+
+    [Authorize]
+    [HttpPost]
+    public ActionResult YeniKategoriAjax(TBLKATEGORILER kategori)
+    {
+        if (string.IsNullOrWhiteSpace(kategori.KATEGORIAD) || string.IsNullOrWhiteSpace(kategori.KATEGORIAD_EN))
+        {
+            return Json(new { success = false, message = "Kategori adı boş olamaz." });
+        }
+
+        db.TBLKATEGORILER.Add(kategori);
+        db.SaveChanges();
+
+        return Json(new { success = true });
+    }
+
+
 }
